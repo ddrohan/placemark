@@ -23,8 +23,8 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
             placemark.description = placemarkDescription.text.toString()
 
             if (placemark.title.isNotEmpty() &&  placemark.description.isNotEmpty()) {
-                placemarks.add(placemark)
-                info("added : $placemarks")
+                placemarks.add(placemark.copy())
+                placemarks.forEach { info("added: ${it.title} , ${it.description}")}
             }
             else {
                 toast ("Please Enter a title")
