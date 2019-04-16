@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Placemark</string>
     <string name="button_addPlacemark">Add Placemark</string>
+    <string name="button_savePlacemark">Save Placemark</string>
     <string name="hint_placemarkTitle">Placemark Title</string>
     <string name="hint_placemarkDescription">Placemark Description</string>
     <string name="menu_addPlacemark">Add</string>
     <string name="menu_CancelPlacemark">Cancel</string>
+    <string name="error_Title">Please Enter a Title</string>
 </resources>
