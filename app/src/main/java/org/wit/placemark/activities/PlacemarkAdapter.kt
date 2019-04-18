@@ -1,11 +1,13 @@
 package org.wit.placemark.activities
 
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.card_placemark.view.*
 import org.wit.placemark.R
+import org.wit.placemark.helpers.readImageFromPath
 import org.wit.placemark.models.PlacemarkModel
 
 interface PlacemarkListener {
@@ -28,9 +30,15 @@ class PlacemarkAdapter constructor(private var placemarks: List<PlacemarkModel>,
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+
         fun bind(placemark: PlacemarkModel,  listener : PlacemarkListener) {
-            itemView.addTitle.text = placemark.title
-            itemView.addDescription.text = placemark.description
+            itemView.placemarkTitle.text = placemark.title
+            itemView.description.text = placemark.description
+            val bitmap = readImageFromPath(itemView.context,placemark.image)
+            if (bitmap != null)
+                itemView.imageIcon.setImageBitmap(bitmap)
+//            else
+//                itemView.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
             itemView.setOnClickListener { listener.onPlacemarkClick(placemark) }
         }
     }
