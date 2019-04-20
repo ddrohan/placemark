@@ -8,12 +8,14 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_placemark.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import org.wit.placemark.R
 import org.wit.placemark.helpers.showImagePicker
 import org.wit.placemark.helpers.readImage
 import org.wit.placemark.helpers.readImageFromPath
 import org.wit.placemark.main.MainApp
+import org.wit.placemark.models.Location
 import org.wit.placemark.models.PlacemarkModel
 
 class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
@@ -22,6 +24,7 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
     lateinit var app : MainApp
     var edit = false
     val IMAGE_REQUEST = 1
+    val LOCATION_REQUEST = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,9 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
             placemark = intent.extras.getParcelable<PlacemarkModel>("placemark_edit")
             placemarkTitle.setText(placemark.title)
             description.setText(placemark.description)
+//            location.lat = placemark.lat
+//            location.lng = placemark.lng
+//            location.zoom = placemark.zoom
             if(!placemark.image.isBlank())
                 placemarkImage.setImageBitmap(readImageFromPath(this, placemark.image))
             else
@@ -47,6 +53,9 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
         btnAdd.setOnClickListener() {
             placemark.title = placemarkTitle.text.toString()
             placemark.description = description.text.toString()
+//            placemark.lat = location.lat
+//            placemark.lng = location.lng
+//            placemark.zoom = location.zoom
             if (placemark.title.isEmpty()) {
                 toast(R.string.error_Title)
             } else {
@@ -63,6 +72,16 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
 
         chooseImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
+        }
+
+        placemarkLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (placemark.zoom != 0f) {
+                location.lat =  placemark.lat
+                location.lng = placemark.lng
+                location.zoom = placemark.zoom
+            }
+            startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
         }
     }
 
@@ -85,6 +104,14 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
                 if (data != null) {
                     placemark.image = data.getData().toString()
                     placemarkImage.setImageBitmap(readImage(this, resultCode, data))
+                }
+            }
+            LOCATION_REQUEST -> {
+                if (data != null) {
+                    val location = data.extras.getParcelable<Location>("location")
+                    placemark.lat = location.lat
+                    placemark.lng = location.lng
+                    placemark.zoom = location.zoom
                 }
             }
         }
