@@ -87,12 +87,20 @@ class PlacemarkActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add, menu)
+        if (edit && menu != null) menu.getItem(1).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.item_cancel -> finish()
+            R.id.item_delete -> {
+                info("Deleting a Placemark")
+                app.placemarks.delete(placemark)
+                finish()
+            }
+            R.id.item_cancel -> {
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
