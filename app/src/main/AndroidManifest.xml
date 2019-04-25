@@ -13,9 +13,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".activities.PlacemarkMapsActivity"
+                android:name=".views.map.PlacemarkMapView"
                 android:label="@string/title_activity_placemark_maps"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme">
         </activity>
 
         <meta-data
@@ -23,12 +23,12 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name=".activities.MapsActivity"
+                android:name=".views.editlocation.EditLocationView"
                 android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".activities.PlacemarkActivity">
+        <activity android:name=".views.placemark.PlacemarkView">
         </activity>
-        <activity android:name=".activities.PlacemarkListActivity">
+        <activity android:name=".views.placemarklist.PlacemarkListView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
