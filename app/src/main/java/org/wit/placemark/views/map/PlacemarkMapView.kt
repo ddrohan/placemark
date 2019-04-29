@@ -1,40 +1,47 @@
 package org.wit.placemark.views.map
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import org.wit.placemark.R
 import kotlinx.android.synthetic.main.activity_placemark_map.*
 import kotlinx.android.synthetic.main.content_placemark_map.*
 import org.wit.placemark.helpers.readImageFromPath
-import org.wit.placemark.main.MainApp
 import org.wit.placemark.models.PlacemarkModel
+import org.wit.placemark.views.BaseView
 
-class PlacemarkMapView : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
+class PlacemarkMapView : BaseView(), GoogleMap.OnMarkerClickListener {
 
     lateinit var presenter: PlacemarkMapPresenter
-    lateinit var app: MainApp
+    lateinit var map : GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_placemark_map)
-        setSupportActionBar(toolbarMaps)
+        super.init(toolbarMaps)
+
+        presenter = initPresenter (PlacemarkMapPresenter(this)) as PlacemarkMapPresenter
+
         mapView.onCreate(savedInstanceState);
-        presenter = PlacemarkMapPresenter(this)
         mapView.getMapAsync {
-            presenter.configureMap(it)
+            map = it
+            map.setOnMarkerClickListener(this)
+            presenter.loadPlacemarks()
         }
     }
 
-    fun showPlacemark(placemark: PlacemarkModel) {
+    override fun showPlacemark(placemark: PlacemarkModel) {
         currentTitle.text = placemark.title
         currentDescription.text = placemark.description
         imageView.setImageBitmap(readImageFromPath(this, placemark.image))
     }
 
+    override fun showPlacemarks(placemarks: List<PlacemarkModel>) {
+        presenter.doPopulateMap(map, placemarks)
+    }
+
     override fun onMarkerClick(marker: Marker): Boolean {
-        presenter.doUpdateMarker(marker)
+        presenter.doMarkerSelected(marker)
         return true
     }
 

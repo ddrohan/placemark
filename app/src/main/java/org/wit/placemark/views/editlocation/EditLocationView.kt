@@ -1,19 +1,16 @@
 package org.wit.placemark.views.editlocation
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import org.jetbrains.anko.AnkoLogger
 import org.wit.placemark.R
+import org.wit.placemark.views.BaseView
 
-class EditLocationView : AppCompatActivity(), AnkoLogger, GoogleMap.OnMarkerDragListener,
-    GoogleMap.OnMarkerClickListener {
+class EditLocationView : BaseView(), GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener {
 
-    private lateinit var map: GoogleMap
+    lateinit var map: GoogleMap
     lateinit var presenter: EditLocationPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +22,11 @@ class EditLocationView : AppCompatActivity(), AnkoLogger, GoogleMap.OnMarkerDrag
             map = it
             map.setOnMarkerDragListener(this)
             map.setOnMarkerClickListener(this)
-            presenter.initMap(map)
+            presenter.doConfigureMap(map)
         }
     }
 
-    override fun onMarkerDragStart(marker: Marker) {
-
-    }
+    override fun onMarkerDragStart(marker: Marker) {}
 
     override fun onMarkerDrag(marker: Marker) {
         val loc = LatLng(marker.position.latitude, marker.position.longitude)
@@ -41,11 +36,11 @@ class EditLocationView : AppCompatActivity(), AnkoLogger, GoogleMap.OnMarkerDrag
     }
 
     override fun onMarkerDragEnd(marker: Marker) {
-        presenter.doUpdateLocation(marker.position.latitude, marker.position.longitude, map.cameraPosition.zoom)
+        presenter.doUpdateLocation(marker.position.latitude, marker.position.longitude)
     }
 
     override fun onBackPressed() {
-        presenter.doOnBackPressed()
+        presenter.doSave()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -53,3 +48,5 @@ class EditLocationView : AppCompatActivity(), AnkoLogger, GoogleMap.OnMarkerDrag
         return false
     }
 }
+
+
